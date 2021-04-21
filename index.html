@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel='stylesheet' href='index.css' />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src='./modules/pixi.js'></script>
+        <script src='script.js'></script>
+        <title>Elon Musk Simulator</title>
+    </head>
+    <body>
+        <div id='header'>
+            <h1>Elon Musk Simulator 3000</h1>
+            <div id='options'>
+                <div class='options-input'>
+                    <p>MUTATION CHANCE:</p>
+                    <input id='mutation-chance' type='number' value=5 />
+                </div>
+                <div class='options-input'>
+                    <p>ROCKET COUNT:</p>
+                    <input id='rocket-count' type='number' value=20 />
+                </div>
+                <div class='options-input'>
+                    <p>CYCLE RATE:</p>
+                    <input id='cycle-rate' type='number' value=100 />
+                </div>
+                <div class='options-input'>
+                    <p>CHROMOSOMES:</p>
+                    <input id='chromosome-count' type='number' value=40 />
+                </div>
+                <button id='start-button'>Start</button>
+            </div>
+        </div>
+        <div id='canvas-container' >
+            <div id='pixi-canvas'></div>
+        </div>
+        <script src='genetic-algorithm.js' type='module'></script>
+        <div id='analysis'>
+            <p id='gen'>Generation: </p>
+            <p id='fitness'>Avg Fitness: </p>
+        </div>
+        <div id='about'>
+            <h1>About This Algorithm</h1>
+            <p>A genetic algorithm is a form of <strong>weak artificial intelligence</strong> that is based on Darwin's principle of natural selection - <strong>survival of the fittest</strong>. The algorithm is given a problem - reaching the green circle - and a 
+                set of randomly generated possible solutions to this problem - the rockets. After testing each of these possible solutions, it determines which possible solutions were closest to the final solution, determined by a few factors - this is 
+                referred to as fitness. The algorithm then randomly selects parents for the next generation, however, the rockets with higher fitness are more likely to be selected. Finally, based on mutation chance, the algorithm alters some of the genes of 
+                each rocket. This continues until the algorithm reaches the final, correct, solution.
+            </p>
+            <p>
+                The default values set when you reload the page are ideal for reaching a solution within around 30 generations. Changing the mutation chance will change the chance for each rocket to randomly create individual chromosomes instead of 
+                recieving it from its parents. Changing the rocket count changes the number of rockets in each generation. Changing the cycle rate will change how quickly the rockets will cycle through all of their choromosomes. Changing the chromosomes 
+                value will change how many sets of genes each rocket recieves. The lifetime of each generation can be calculated by the following formula <strong>Lifetime (ms) = cycle rate * chromosomes</strong>. The position of each obstacle, including 
+                the green planet, can be changed by clicking on each circle in order to toggle your control over it on or off. Then, using the arrow keys, their position can be changed.
+            </p>
+            <p>
+                Note: as long as there is a chance for mutation, the algorithm will never produce a <strong>perfect</strong> generation. Additionally, even if the algorithm reaches a majority of successful offspring, if the parent selection function happens 
+                to unluckily select a poor performance rocket, the entire lifeline can be contaminated. This means that even after a few generations of success, the offspring may end up generating a majority of poor performance rockets generations later.
+            </p>
+            <a>SOURCE CODE</a>
+        </div>
+    </body>
+</html>

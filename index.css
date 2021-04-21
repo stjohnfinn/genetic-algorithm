@@ -1,0 +1,104 @@
+@font-face {
+  font-family: "Atkinson";
+  src: url("./fonts/Atkinson-Hyperlegible-Regular-102.otf");
+}
+input:focus, button:focus {
+  outline: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #cecece;
+  color: #EC0B43;
+  font-family: "Atkinson";
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+body h1 {
+  margin: 10px;
+}
+body #header {
+  width: 100%;
+  font-size: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+body #analysis {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  justify-content: space-evenly;
+  color: #505050;
+}
+body #about {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+body #about p {
+  color: #505050;
+  line-height: 1.7rem;
+}
+body #about p strong {
+  color: black;
+}
+body #about a {
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+body #options {
+  width: 100%;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+body #options .options-input {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+body #options .options-input p {
+  font-weight: bold;
+  padding-right: 10px;
+  font-size: 1rem;
+}
+body #options .options-input input[type=number] {
+  border: none;
+  font-size: 1rem;
+  font-family: "Atkinson";
+  width: 70px;
+  background: transparent;
+  border-bottom: 2px black dashed;
+}
+body #options .options-input input[type=number]:focus {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+body #options button {
+  width: 10%;
+  border-radius: 0px;
+  border: 2px black solid;
+  font-family: "Atkinson";
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  background-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0px;
+  font-weight: bold;
+}
+body #options button:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+body #options button:active {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/*# sourceMappingURL=index.css.map */
