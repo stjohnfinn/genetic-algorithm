@@ -27,6 +27,18 @@
                     <p>CHROMOSOMES:</p>
                     <input id='chromosome-count' type='number' value=40 />
                 </div>
+                <div class='options-input'>
+                    <p>ENDLESS: </p>
+                    <input id='endless-mode' type='checkbox' checked />
+                </div>
+                <div class='options-input'>
+                    <p>DESCENDING MUTATION: </p>
+                    <input id='desc-mutation' type='checkbox' />
+                </div>
+                <div class='options-input'>
+                    <p>PLANETARY GRAVITY: </p>
+                    <input id='gravity' type='checkbox' />
+                </div>
                 <button id='start-button'>Start</button>
             </div>
         </div>
@@ -49,13 +61,15 @@
                 The default values set when you reload the page are ideal for reaching a solution within around 30 generations. Changing the mutation chance will change the chance for each rocket to randomly create individual chromosomes instead of 
                 recieving it from its parents. Changing the rocket count changes the number of rockets in each generation. Changing the cycle rate will change how quickly the rockets will cycle through all of their choromosomes. Changing the chromosomes 
                 value will change how many sets of genes each rocket recieves. The lifetime of each generation can be calculated by the following formula <strong>Lifetime (ms) = cycle rate * chromosomes</strong>. The position of each obstacle, including 
-                the green planet, can be changed by clicking on each circle in order to toggle your control over it on or off. Then, using the arrow keys, their position can be changed.
+                the green planet, can be changed by clicking on each circle in order to toggle your control over it on or off. Then, using the arrow keys, their position can be changed. Descending Mutation means that after each generation, the chance for 
+                mutation decreases by five percent. This feature was implemented because with a high number of chromosomes, even with a relatively low mutation chance, there is a very small chance the rockets will converge. Descending mutation makes convergence 
+                much more likely but slightly decreases the chance that the rockets create a successful generation.
             </p>
             <p>
                 Note: as long as there is a chance for mutation, the algorithm will never produce a <strong>perfect</strong> generation. Additionally, even if the algorithm reaches a majority of successful offspring, if the parent selection function happens 
                 to unluckily select a poor performance rocket, the entire lifeline can be contaminated. This means that even after a few generations of success, the offspring may end up generating a majority of poor performance rockets generations later.
             </p>
-            <a>SOURCE CODE</a>
+            <a href='https://github.com/stjohnfinn/genetic-algorithm' >SOURCE CODE</a>
         </div>
     </body>
 </html>

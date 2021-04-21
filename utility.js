@@ -3,10 +3,33 @@ export function randNum(min, max) {
     return output;
 }
 
+export function calcAngleTo(x1, y1, x2, y2) {
+    let y = y2 - y1;
+    let x = x2 - x1;
+    let theta = Math.atan(y / x);
+    if (x2 == x1) {
+        if (y2 > y1) {
+            return Math.PI;
+        } else if (y2 < y1) {
+            return -Math.PI;
+        }
+    } else if (x2 < x1) {
+        theta += Math.PI;
+    }
+
+    return theta;
+}
+
 export function calcDist(x1, y1, x2, y2) {
     let a = x2 - x1;
     let b = y2 - y1;
     return Math.sqrt( (a * a) + (b * b) );
+}
+
+export function univGrav(m1, m2, d) {
+    let g = 6.67 * Math.pow(10, -11);
+    let m = m1 * m2;
+    return g * m / ( d * d);
 }
 
 export function randomHex() {

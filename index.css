@@ -16,6 +16,14 @@ body {
   flex-direction: column;
   align-items: center;
 }
+body a {
+  color: #EC0B43;
+  text-decoration: none;
+}
+body a:visited {
+  text-decoration: none;
+  color: #EC0B43;
+}
 body h1 {
   margin: 10px;
 }
@@ -60,8 +68,11 @@ body #options {
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
+  flex-wrap: wrap;
+  margin: 5px;
 }
 body #options .options-input {
+  margin: 5px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -84,7 +95,6 @@ body #options .options-input input[type=number]:focus {
   background-color: rgba(0, 0, 0, 0.2);
 }
 body #options button {
-  width: 10%;
   border-radius: 0px;
   border: 2px black solid;
   font-family: "Atkinson";
@@ -93,6 +103,8 @@ body #options button {
   background-color: rgba(0, 0, 0, 0.2);
   box-shadow: 0px 0px 0px;
   font-weight: bold;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 body #options button:hover {
   background-color: rgba(0, 0, 0, 0.4);

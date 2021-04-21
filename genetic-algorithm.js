@@ -1,4 +1,4 @@
-import { randomHex, randNum, calcDist } from './utility.js';
+import { univGrav, randNum, calcDist, calcAngleTo } from './utility.js';
 import { weightedRandom } from './weightedRandom.js';
 
 const loader = PIXI.Loader.shared;
@@ -7,6 +7,14 @@ const HEIGHT = 700;
 const X_ACC = 0;
 const Y_ACC = 1;
 
+const E_MASS = 5.972 * Math.pow(10, 15);
+const B_MASS = E_MASS * 50 / 90;
+const R_MASS = E_MASS * 75 / 90;
+let ROCKET_MASS = 549054;
+
+let descendingMutation = false;
+let successPercentage = 0;
+let endless = true;
 let canvasX = 0;
 let canvasY = 0;
 let mouseXRel = 0;
@@ -30,6 +38,7 @@ let EARTH = {
     width: 90
 };
 
+let hasGravity = false;
 let rocketCount = 20;
 let mutationChance = 5;
 let chromosomesCount = 40;
@@ -38,10 +47,7 @@ let cycleRate = 100;
 const app = new PIXI.Application({width: WIDTH, height: HEIGHT });
 $('#pixi-canvas').append(app.view);
 
-// Might be able to just stick VV this in a function and call it on a button press
-
 function start() {
-
     loader
     .add('./images/rocket.png')
     .add('./images/earth.png')
@@ -57,6 +63,9 @@ $('#start-button').click( () => {
     mutationChance = $('#mutation-chance').val();
     chromosomesCount = $('#chromosome-count').val();
     cycleRate = $('#cycle-rate').val();
+    endless = $('#endless-mode').is(':checked');
+    descendingMutation = $('#desc-mutation').is(':checked');
+    hasGravity = $('#gravity').is(':checked');
 
     start();
 });
@@ -96,10 +105,16 @@ function setup() {
         mouseYRel = event.pageY - canvasY - window.pageYOffset;
         if (calcDist(mouseXRel, mouseYRel, redPlanet.sprite.x, redPlanet.sprite.y) < RED_PLANET.width) {
             movingRedPlanet = !movingRedPlanet;
+            movingBluePlanet = false;
+            movingEarth = false;
         } if (calcDist(mouseXRel, mouseYRel, bluePlanet.sprite.x, bluePlanet.sprite.y) < BLUE_PLANET.width) {
             movingBluePlanet = !movingBluePlanet;
+            movingRedPlanet = false;
+            movingEarth = false;
         } if (calcDist(mouseXRel, mouseYRel, earth.sprite.x, earth.sprite.y) < EARTH.width) {
             movingEarth = !movingEarth;
+            movingRedPlanet = false;
+            movingBluePlanet = false;
         }
     });
     
@@ -175,7 +190,12 @@ function gameLoop() {
 }
 
 function moveRockets() {
+    hasGravity = $('#gravity').is(':checked');
+
     for (let i = 0; i < population.length; i++) {
+        if (hasGravity) {
+            population[i].calcGravity();
+        }
         population[i].move();
     }
 }
@@ -220,7 +240,6 @@ function checkCollision() {
             population[i].shouldMove = false;
             population[i].madeToGoal = true;
             population[i].sprite.scale.set(0.7);
-            // population[i].sprite.rotation = Math.atan( (EARTH.y - population[i].sprite.y) / (EARTH.x - population[i].sprite.x) ) + Math.PI;
         }
     }
 }
@@ -239,12 +258,38 @@ function checkDeath() {
         isRunning = false;
         clearInterval(crcIntervalId);
 
-        createNthGen();
-        allDead = false;
+        let successCounter = 0;
+        for (let i = 0; i < population.length; i++) {
+            if (population[i].madeToGoal) {
+                successCounter++;
+            }
+        }
+        successPercentage = successCounter / population.length;
+
+        endless = $('#endless-mode').is(':checked');
+
+        if (endless) {
+            createNthGen();
+            allDead = false;
+        } else {
+            if (successPercentage > 0.3) {
+                complete();
+            } else {
+                createNthGen();
+                allDead = false;
+            }
+        }
     }
 }
 
 function createNthGen() {
+    // do some preliminary shit
+
+    if (descendingMutation) {
+        mutationChance = mutationChance * 0.95;
+        console.log(mutationChance);
+    }
+
     // 1. find the parents
 
     for (let i = 0; i < population.length; i++) {
@@ -326,6 +371,25 @@ function restart() {
     isRunning = true;
 }
 
+function complete() {
+
+    let style = new PIXI.TextStyle({
+        fontFamily: 'Arial',
+        fontSize: 72,
+        fill: "#bbbbbb",
+        dropShadow: true,
+        dropShadowColor: 'black',
+        dropShadowBlue: 4,
+        drowShadowDistance: 6
+    });
+
+    let message = new PIXI.Text("Solution Found!", style);
+    message.anchor.set(0.5);
+
+    app.stage.addChild(message);
+    message.position.set(WIDTH / 2, HEIGHT / 2);
+}
+
 class Rocket {
     constructor() {
         this.genes = [];
@@ -392,6 +456,24 @@ class Rocket {
                 this.sprite.rotation = Math.atan(this.yvel / this.xvel);
             }
         }
+    }
+
+    calcGravity() {
+        let b = univGrav(ROCKET_MASS, B_MASS, calcDist(this.sprite.x, this.sprite.y, bluePlanet.sprite.x, bluePlanet.sprite.y) * 1000);
+        let r = univGrav(ROCKET_MASS, R_MASS, calcDist(this.sprite.x, this.sprite.y, redPlanet.sprite.x, redPlanet.sprite.y) * 1000);
+        let e = univGrav(ROCKET_MASS, E_MASS, calcDist(this.sprite.x, this.sprite.y, earth.sprite.x, earth.sprite.y) * 1000);
+
+        let bx = b * Math.cos(calcAngleTo(this.sprite.x, this.sprite.y, bluePlanet.sprite.x, bluePlanet.sprite.y));
+        let by = b * Math.sin(calcAngleTo(this.sprite.x, this.sprite.y, bluePlanet.sprite.x, bluePlanet.sprite.y));
+
+        let rx = r * Math.cos(calcAngleTo(this.sprite.x, this.sprite.y, redPlanet.sprite.x, redPlanet.sprite.y));
+        let ry = r * Math.sin(calcAngleTo(this.sprite.x, this.sprite.y, redPlanet.sprite.x, redPlanet.sprite.y));
+        
+        let ex = e * Math.cos(calcAngleTo(this.sprite.x, this.sprite.y, earth.sprite.x, earth.sprite.y));
+        let ey = e * Math.sin(calcAngleTo(this.sprite.x, this.sprite.y, earth.sprite.x, earth.sprite.y));
+
+        this.xvel += (bx + rx + ex) / 60;
+        this.yvel += (by + ry + ey) / 60;
     }
 
     calcFitness() {
