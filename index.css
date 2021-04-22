@@ -25,6 +25,7 @@ body a:visited {
   color: #EC0B43;
 }
 body h1 {
+  text-align: center;
   margin: 10px;
 }
 body #header {

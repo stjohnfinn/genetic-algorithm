@@ -12,6 +12,8 @@ const B_MASS = E_MASS * 50 / 90;
 const R_MASS = E_MASS * 75 / 90;
 let ROCKET_MASS = 549054;
 
+let crossoverMethod = 'single';
+let gravityRelativeDistance = 1800;
 let descendingMutation = false;
 let successPercentage = 0;
 let endless = true;
@@ -154,6 +156,7 @@ function setup() {
 }
 
 function createFirstGen() {
+
     for (let i = 0; i < rocketCount; i++) {
         population.push(new Rocket());
 
@@ -194,6 +197,7 @@ function moveRockets() {
 
     for (let i = 0; i < population.length; i++) {
         if (hasGravity) {
+            gravityRelativeDistance = 5000 - $('#gravity-slider').val();
             population[i].calcGravity();
         }
         population[i].move();
@@ -285,6 +289,7 @@ function checkDeath() {
 function createNthGen() {
     // do some preliminary shit
 
+    crossoverMethod = $('#crossover-input').val();
     if (descendingMutation) {
         mutationChance = mutationChance * 0.95;
         console.log(mutationChance);
@@ -317,20 +322,17 @@ function createNthGen() {
 
     // COMMENT THIS OUT LATER
 
-    // parentB = parentA;
-
-
-    // console.log('Parent A: ' + parentA.fitness);
-    // console.log('Parent B: ' + parentB.fitness);
-
     // 2. perform crossover
 
-    rocketsRandomArray = [];
     for (let i = 0; i < population.length; i++) {
         population[i].reset();
     }
 
-    overwriteGenes(parentA, parentB);
+    if (crossoverMethod === 'single') {
+        crossoverSingle(parentA, parentB);
+    } else {
+        crossoverRand(parentA, parentB);
+    }
 
     // 3. perform mutation
 
@@ -341,7 +343,22 @@ function createNthGen() {
     lifecycle();
 }
 
-function overwriteGenes(parentA, parentB) {
+function crossoverRand(parentA, parentB) {
+    for (let i = 0; i < population.length; i++) {
+        for (let j = 0; j < chromosomesCount; j++) {
+            let x = Math.random();
+            if (x < 0.5) {
+                population[i].genes[j][X_ACC] = parentA.genes[j][X_ACC];
+                population[i].genes[j][Y_ACC] = parentA.genes[j][Y_ACC];
+            } else {
+                population[i].genes[j][X_ACC] = parentB.genes[j][X_ACC];
+                population[i].genes[j][Y_ACC] = parentB.genes[j][Y_ACC];
+            }
+        }
+    }
+} 
+
+function crossoverSingle(parentA, parentB) {
     let splitIndex = randNum(chromosomesCount * 0.25, chromosomesCount * 0.75);
     for (let i = 0; i < population.length; i++) {
         for (let j = 0; j < chromosomesCount; j++) {
@@ -411,7 +428,7 @@ class Rocket {
         this.sprite.endFill();
         this.sprite.x = 100;
         this.sprite.y = HEIGHT / 2;
-        this.xvel = 1;
+        this.xvel = Number($('#rocket-velocity').val());
         this.yvel = 0;
         this.xacc = 0;
         this.yacc = 0;
@@ -427,7 +444,7 @@ class Rocket {
         this.sprite.x = 100;
         this.sprite.y = HEIGHT / 2;
         this.sprite.scale.set(1);
-        this.xvel = 1;
+        this.xvel = Number($('#rocket-velocity').val());
         this.yvel = 0;
         this.xacc = 0;
         this.yacc = 0;
@@ -459,9 +476,10 @@ class Rocket {
     }
 
     calcGravity() {
-        let b = univGrav(ROCKET_MASS, B_MASS, calcDist(this.sprite.x, this.sprite.y, bluePlanet.sprite.x, bluePlanet.sprite.y) * 1000);
-        let r = univGrav(ROCKET_MASS, R_MASS, calcDist(this.sprite.x, this.sprite.y, redPlanet.sprite.x, redPlanet.sprite.y) * 1000);
-        let e = univGrav(ROCKET_MASS, E_MASS, calcDist(this.sprite.x, this.sprite.y, earth.sprite.x, earth.sprite.y) * 1000);
+
+        let b = univGrav(ROCKET_MASS, B_MASS, calcDist(this.sprite.x, this.sprite.y, bluePlanet.sprite.x, bluePlanet.sprite.y) * gravityRelativeDistance);
+        let r = univGrav(ROCKET_MASS, R_MASS, calcDist(this.sprite.x, this.sprite.y, redPlanet.sprite.x, redPlanet.sprite.y) * gravityRelativeDistance);
+        let e = univGrav(ROCKET_MASS, E_MASS, calcDist(this.sprite.x, this.sprite.y, earth.sprite.x, earth.sprite.y) * gravityRelativeDistance);
 
         let bx = b * Math.cos(calcAngleTo(this.sprite.x, this.sprite.y, bluePlanet.sprite.x, bluePlanet.sprite.y));
         let by = b * Math.sin(calcAngleTo(this.sprite.x, this.sprite.y, bluePlanet.sprite.x, bluePlanet.sprite.y));

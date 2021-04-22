@@ -10,7 +10,7 @@
     </head>
     <body>
         <div id='header'>
-            <h1>Elon Musk Simulator 3000</h1>
+            <h1>Elon Musk Simulator</h1>
             <div id='options'>
                 <div class='options-input'>
                     <p>MUTATION CHANCE:</p>
@@ -29,16 +29,32 @@
                     <input id='chromosome-count' type='number' value=40 />
                 </div>
                 <div class='options-input'>
-                    <p>ENDLESS: </p>
+                    <p>ENDLESS:</p>
                     <input id='endless-mode' type='checkbox' checked />
                 </div>
                 <div class='options-input'>
-                    <p>DESCENDING MUTATION: </p>
+                    <p>DESCENDING MUTATION:</p>
                     <input id='desc-mutation' type='checkbox' />
                 </div>
                 <div class='options-input'>
-                    <p>PLANETARY GRAVITY: </p>
+                    <p>PLANETARY GRAVITY:</p>
                     <input id='gravity' type='checkbox' />
+                </div>
+                <div class='options-input'>
+                    <p>STRENGTH OF GRAVITY:</p>
+                    <input id='gravity-slider' type='range' min=0 max=4000 value=2200 step=200 />
+                </div>
+                <div class='options-input'>
+                    <p>ROCKET VELOCITY:</p>
+                    <input id='rocket-velocity' type='range' min=0 max=5 value=1 step=1 />
+                </div>
+                <div class='options-input'>
+                    <p>CROSSOVER METHOD:</p>
+                    <select id='crossover-input'>
+                        <!-- <option value='cowgc' >COWGC</option> -->
+                        <option value='rand' >Random Individual</option>
+                        <option value='single' selected >Single Random Index</option>
+                    </select>
                 </div>
                 <button id='start-button'>Start</button>
             </div>
@@ -64,11 +80,12 @@
                 value will change how many sets of genes each rocket recieves. The lifetime of each generation can be calculated by the following formula <strong>Lifetime (ms) = cycle rate * chromosomes</strong>. The position of each obstacle, including 
                 the green planet, can be changed by clicking on each circle in order to toggle your control over it on or off. Then, using the arrow keys, their position can be changed. Descending Mutation means that after each generation, the chance for 
                 mutation decreases by five percent. This feature was implemented because with a high number of chromosomes, even with a relatively low mutation chance, there is a very small chance the rockets will converge. Descending mutation makes convergence 
-                much more likely but slightly decreases the chance that the rockets create a successful generation.
+                much more likely but slightly decreases the chance that the rockets create a successful generation. The force of gravity on each rocket is calculated using the mass of the Space X Falcon 9 rocket and the mass of Earth, but the distances between the objects 
+                are reduced proportionally in order to increase the effect to where it is noticeable.
             </p>
             <p>
-                Note: as long as there is a chance for mutation, the algorithm will never produce a <strong>perfect</strong> generation. Additionally, even if the algorithm reaches a majority of successful offspring, if the parent selection function happens 
-                to unluckily select a poor performance rocket, the entire lifeline can be contaminated. This means that even after a few generations of success, the offspring may end up generating a majority of poor performance rockets generations later.
+                Note: as long as there is a chance for mutation, the algorithm will almost never produce a <strong>perfect</strong> generation. Additionally, even if the algorithm reaches a majority of successful offspring, if the parent selection function happens 
+                to unluckily select a poor performance rocket, the entire lifeline can be contaminated. This means that even after a few generations of success, the offspring may end up mostly unsuccessful.
             </p>
             <a href='https://github.com/stjohnfinn/genetic-algorithm' >SOURCE CODE</a>
         </div>
